@@ -77,7 +77,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-     - name: Build Desktop package
+    - name: Build Desktop package
       run: ./gradlew :composeApp:packageReleaseDistributionForCurrentOS
       shell: bash
   
