@@ -36,7 +36,7 @@
     <string name="status_not_working">Not working</string>
     <string name="status_loading">Loading…</string>
     <string name="use_at_your_risk">Not recommended, use at your own risk</string>
-    <string name="patch_copy_libraries">Copy ovrport libraries</string>
+    <string name="patch_copy_libraries">Copy overport libraries</string>
     <string name="patch_copy_ovrplugin_vrapi">Copy OVRPlugin if VrApi is present</string>
     <string name="patch_fix_min_android_sdk">Fix minimal Android SDK</string>
     <string name="patch_generate_config">Generate ovrport config</string>
