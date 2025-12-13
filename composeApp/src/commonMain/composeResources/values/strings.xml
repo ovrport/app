@@ -28,7 +28,11 @@
     <string name="cant_read_apk">Selected APK file cannot be parsed.</string>
     <string name="apk_file_exported">APK file has been successfully exported.</string>
     <string name="cant_update_overport">overport libraries cannot be downloaded.</string>
-    <string name="unknown_error">Unknown error has been occurred.</string>
+    <string name="unknown_error">Unknown error has been occurred</string>
+    <string name="cant_checkout_title">Can't checkout version</string>
+    <string name="cant_checkout_message">Selected overport version is unavailable for download. Please, check your
+        internet connection or choose another version.
+    </string>
     <string name="update_available">Update available!</string>
     <string name="status_unknown">Unknown</string>
     <string name="status_playable">Playable</string>

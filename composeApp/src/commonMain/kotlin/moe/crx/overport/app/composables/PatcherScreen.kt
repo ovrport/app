@@ -11,10 +11,9 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import moe.crx.overport.app.model.MainViewModel
+import moe.crx.overport.utils.CantCheckoutException
 import org.jetbrains.compose.resources.getString
-import overportapp.composeapp.generated.resources.Res
-import overportapp.composeapp.generated.resources.apk_file_exported
-import overportapp.composeapp.generated.resources.unknown_error
+import overportapp.composeapp.generated.resources.*
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -101,6 +100,10 @@ fun PatcherScreen(
                     try {
                         viewModel.checkout(it, name)
                         viewModel.prepare(stream)
+                    } catch (_: CantCheckoutException) {
+                        viewModel.cancel()
+                        errorMessage =
+                            getString(Res.string.cant_checkout_title) to getString(Res.string.cant_checkout_message)
                     } catch (ex: Throwable) {
                         viewModel.cancel()
                         errorMessage = getString(Res.string.unknown_error) to ex.stackTraceToString()
