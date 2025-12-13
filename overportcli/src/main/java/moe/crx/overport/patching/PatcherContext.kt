@@ -52,17 +52,8 @@ class PatcherContext(
     }
 
     fun checkout() {
-        var successful = VersionManager(patcherDirectory).checkout(overportVersion)
-
-        if (successful == null) {
-            successful = VersionManager(patcherDirectory).checkout("latest")
-        }
-
-        if (successful == null) {
-            throw CantCheckoutException("Can't checkout an overport release. Please, check your internet connection or choose another version.")
-        }
-
-        overportVersion = successful
+        overportVersion = VersionManager(patcherDirectory).checkout(overportVersion)
+            ?: throw CantCheckoutException("Can't checkout an overport release. Please, check your internet connection or choose another version.")
     }
 
     fun prepare(stream: InputStream) {
