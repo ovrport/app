@@ -35,12 +35,11 @@ fun VersionManagerSheet(viewModel: MainViewModel, onSelected: (String) -> Unit, 
     }
 
     ModalBottomSheet(
-        modifier = Modifier.fillMaxHeight(),
         onDismissRequest = { onCancel() },
     ) {
         if (available == null) {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth().height(240.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
