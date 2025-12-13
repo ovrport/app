@@ -9,9 +9,7 @@
     <string name="progress_cleaning">Cleaning up…</string>
     <string name="patcher_nav_item">Patcher</string>
     <string name="select_version_title">Select version</string>
-    <string name="you_have_no_versions">You have no versions installed and overport release index is not available.
-        Check your internet connection.
-    </string>
+    <string name="you_have_no_versions">You have no versions installed and overport release index is not available. Check your internet connection.</string>
     <string name="tag_experimental">experimental</string>
     <string name="tag_latest">latest</string>
     <string name="tag_custom">custom</string>
@@ -30,9 +28,7 @@
     <string name="cant_update_overport">overport libraries cannot be downloaded.</string>
     <string name="unknown_error">Unknown error has been occurred</string>
     <string name="cant_checkout_title">Can't checkout version</string>
-    <string name="cant_checkout_message">Selected overport version is unavailable for download. Please, check your
-        internet connection or choose another version.
-    </string>
+    <string name="cant_checkout_message">Selected overport version is unavailable for download. Please, check your internet connection or choose another version.</string>
     <string name="update_available">Update available!</string>
     <string name="status_unknown">Unknown</string>
     <string name="status_playable">Playable</string>
