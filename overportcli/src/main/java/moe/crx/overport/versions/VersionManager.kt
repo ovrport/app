@@ -80,6 +80,7 @@ class VersionManager(val workingDirectory: File) {
         if (installedEntry != null) {
             val librariesDir = workingDirectory.resolve("libraries/${installedEntry.version}")
             if (librariesDir.isDirectory) {
+                appendInstalled(installedEntry)
                 return installedEntry.version
             }
         }
