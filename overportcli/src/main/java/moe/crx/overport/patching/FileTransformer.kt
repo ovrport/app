@@ -8,6 +8,10 @@ class FileTransformer(val file: File) {
         file.writeText(Regex(input, RegexOption.DOT_MATCHES_ALL).replace(file.readText(), output))
     }
 
+    fun delete(): Boolean {
+        return file.deleteRecursively()
+    }
+
     fun readText(): String {
         return file.readText()
     }
