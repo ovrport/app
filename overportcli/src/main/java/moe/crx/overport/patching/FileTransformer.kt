@@ -20,6 +20,11 @@ class FileTransformer(val file: File) {
         file.appendText(line)
     }
 
+    fun appendLine(line: String) {
+        append(line)
+        append("\n")
+    }
+
     fun readJson(): JSONObject? {
         return runCatching { JSONObject(file.readText()) }.getOrNull()
     }
