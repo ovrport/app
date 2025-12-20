@@ -46,7 +46,6 @@ fun AppContent(
             }
 
         var versionToUpdate by remember { mutableStateOf<GithubRelease?>(null) }
-        var showAboutDialog by remember { mutableStateOf(false) }
         val urlHandler = LocalUriHandler.current
 
         LaunchedEffect(Unit) {
@@ -95,18 +94,5 @@ fun AppContent(
             navigationItems = listOf(patcherNavItem),
             itemsEnabled = !viewModel.working && !viewModel.isApkLoaded()
         )
-
-        if (showAboutDialog) {
-            AlertDialog(
-                onDismissRequest = { showAboutDialog = false },
-                title = { Text("overport") },
-                text = { Text("about overport") }, // TODO
-                confirmButton = {
-                    TextButton(onClick = { showAboutDialog = false }) {
-                        Text("Close")
-                    }
-                },
-            )
-        }
     }
 }
