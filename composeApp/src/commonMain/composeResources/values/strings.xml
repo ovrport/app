@@ -47,7 +47,7 @@
     <string name="patch_vr_metadata">Pico/YVR/Quest metadata</string>
     <string name="patch_launcher_entry">Fix launcher icon entry</string>
     <string name="patch_remove_uses_library">Remove uses-library</string>
-    <string name="patch_fix_unreal_crash">Fix Unreal Engine 4 crash</string>
+    <string name="patch_fix_unreal_crash">Fix UE4 crash with Unity stub</string>
     <string name="patch_meta_xr_audio">Patch Meta XR Audio</string>
     <string name="patch_mark_as_debuggable">Mark application as debuggable</string>
     <string name="patch_mark_allow_backup">Mark application to allow backup</string>
