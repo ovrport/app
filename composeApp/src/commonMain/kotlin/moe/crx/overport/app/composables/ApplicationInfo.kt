@@ -31,6 +31,7 @@ fun ApplicationInfo(
     applicationPackage: String? = "com.company.application",
     applicationVersion: String? = "1.0.0",
     applicationIcon: ImageBitmap? = null,
+    forceLocalInfo: Boolean = false,
 ) {
     var iconIsLoading by rememberSaveable(applicationPackage) { mutableStateOf(true) }
     var onlineIcon by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
@@ -61,14 +62,8 @@ fun ApplicationInfo(
     ) {
         Box {
             FadeVisibility(!iconIsLoading) {
-                onlineIcon?.let {
-                    Image(
-                        it,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp).rounded(8.dp)
-                    )
-                } ?: run {
-                    if (applicationIcon == null) {
+                AnimatedContent(onlineIcon.takeIf { !forceLocalInfo } ?: applicationIcon) { it ->
+                    if (it == null) {
                         Icon(
                             Icons.Default.Widgets,
                             contentDescription = null,
@@ -76,7 +71,7 @@ fun ApplicationInfo(
                         )
                     } else {
                         Image(
-                            applicationIcon,
+                            it,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp).rounded(8.dp)
                         )
@@ -91,7 +86,7 @@ fun ApplicationInfo(
             modifier = Modifier.height(48.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            AnimatedContent(onlineLabel ?: applicationName) {
+            AnimatedContent(onlineLabel.takeIf { !forceLocalInfo } ?: applicationName) {
                 Text("$it ($applicationVersion)")
             }
             Text(

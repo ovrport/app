@@ -20,7 +20,7 @@ import overportapp.composeapp.generated.resources.*
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 @Preview
-fun ApplicationInfoCard(
+fun ApplicationInfoContent(
     applicationName: String? = "Application",
     applicationPackage: String? = "",
     applicationVersion: String? = "1.0.0",
@@ -28,6 +28,26 @@ fun ApplicationInfoCard(
     onCancel: () -> Unit = {},
     onConfirm: (Map<String, List<String>>) -> Unit = {}
 ) {
+    val enabledPatches = remember {
+        mutableStateMapOf(
+            *PatchStore.recommended().map { it.name to listOf<String>() }.toTypedArray()
+        )
+    }
+
+    var patchIconArgument by remember {
+        mutableStateOf("icon")
+    }
+
+    fun togglePatch(patch: Patch) {
+        val checked = enabledPatches.containsKey(patch.name)
+
+        if (checked) {
+            enabledPatches.remove(patch.name)
+        } else {
+            enabledPatches[patch.name] = listOf()
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -36,26 +56,13 @@ fun ApplicationInfoCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            ApplicationInfo(applicationName, applicationPackage, applicationVersion, applicationIcon)
-        }
-
-        val enabledPatches = remember {
-            mutableStateMapOf(
-                *PatchStore.recommended().map { it.name to listOf<String>() }.toTypedArray()
+            ApplicationInfo(
+                applicationName,
+                applicationPackage,
+                applicationVersion,
+                applicationIcon,
+                !enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name)
             )
-        }
-        var patchIconArgument by remember {
-            mutableStateOf("icon")
-        }
-
-        fun togglePatch(patch: Patch) {
-            val checked = enabledPatches.containsKey(patch.name)
-
-            if (checked) {
-                enabledPatches.remove(patch.name)
-            } else {
-                enabledPatches[patch.name] = listOf()
-            }
         }
 
         Box(modifier = Modifier.weight(1f)) {

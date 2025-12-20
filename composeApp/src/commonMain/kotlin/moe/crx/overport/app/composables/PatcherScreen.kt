@@ -70,7 +70,7 @@ fun PatcherScreen(
     }
 
     FadeVisibility(isPatcherVisible) {
-        ApplicationInfoCard(
+        ApplicationInfoContent(
             viewModel.currentAppName(),
             viewModel.currentAppPackage(),
             viewModel.currentAppVersion(),
