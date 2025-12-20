@@ -5,7 +5,7 @@ import moe.crx.overport.utils.nameAttribute
 import moe.crx.overport.utils.named
 import moe.crx.overport.utils.takeNodesEach
 
-val PATCH_CLEAN_UP_FRIDA = Patch("patch_clean_up_frida") {
+val PATCH_CLEAN_UP_FRIDA = Patch("patch_clean_up_frida", false) {
     selectLibrary("libfrda.so") {
         file.delete()
     }
