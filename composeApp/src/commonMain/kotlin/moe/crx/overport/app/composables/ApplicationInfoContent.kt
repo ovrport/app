@@ -28,13 +28,13 @@ fun ApplicationInfoContent(
     onCancel: () -> Unit = {},
     onConfirm: (Map<String, List<String>>) -> Unit = {}
 ) {
-    val enabledPatches = remember {
+    val enabledPatches = remember(applicationPackage) {
         mutableStateMapOf(
             *PatchStore.recommended().map { it.name to listOf<String>() }.toTypedArray()
         )
     }
 
-    var patchIconArgument by remember {
+    var patchIconArgument by remember(applicationPackage) {
         mutableStateOf("icon")
     }
 
@@ -136,7 +136,9 @@ fun ApplicationInfoContent(
             Button(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    enabledPatches[PATCH_REPLACE_ICON_LABEL.name] = listOf(patchIconArgument)
+                    if (enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name)) {
+                        enabledPatches[PATCH_REPLACE_ICON_LABEL.name] = listOf(patchIconArgument)
+                    }
                     onConfirm(enabledPatches)
                 }
             ) {
