@@ -41,7 +41,7 @@
     <string name="patch_fix_min_android_sdk">Fix minimal Android SDK</string>
     <string name="patch_generate_config">Generate ovrport config</string>
     <string name="patch_remove_localized_names">Remove localized app names</string>
-    <string name="patch_clean_up_frida">Clean up Frida leftovers</string>
+    <string name="patch_clean_up_frida">Clean up Frida leftovers in smali</string>
     <string name="patch_oculus_unity">Patch Oculus detection for Unity</string>
     <string name="patch_oculus_unreal">Patch Oculus detection for Unreal</string>
     <string name="patch_vr_metadata">Pico/YVR/Quest metadata</string>

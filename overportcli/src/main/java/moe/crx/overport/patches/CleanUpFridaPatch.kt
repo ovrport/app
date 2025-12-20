@@ -5,17 +5,7 @@ import moe.crx.overport.utils.nameAttribute
 import moe.crx.overport.utils.named
 import moe.crx.overport.utils.takeNodesEach
 
-val PATCH_CLEAN_UP_FRIDA = Patch("patch_clean_up_frida", false) {
-    selectLibrary("libfrda.so") {
-        file.delete()
-    }
-    selectLibrary("libfrda.config.so") {
-        file.delete()
-    }
-    selectLibrary("libscript.so") {
-        file.delete()
-    }
-
+val PATCH_CLEAN_UP_FRIDA = Patch("patch_clean_up_frida") {
     selectManifestJson {
         takeNodesEach({ named("manifest") }) {
             takeNodesEach({ named("application") }) {
