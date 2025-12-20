@@ -133,7 +133,7 @@ class VersionManager(val workingDirectory: File) {
                         o2.version
                     )
                 ) 1 else -1
-            })
+            }).filter { workingDirectory.resolve("libraries/${it.version}").isDirectory }
         }
 
         return listOf()
