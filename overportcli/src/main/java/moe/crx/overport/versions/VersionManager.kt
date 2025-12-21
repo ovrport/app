@@ -10,7 +10,7 @@ class VersionManager(val workingDirectory: File) {
 
     companion object {
         val json = Json { ignoreUnknownKeys = true }
-        const val VERSION = "1.2.1"
+        const val VERSION = "1.2.2"
 
         private fun isVersionLower(left: String, right: String): Boolean {
             val (lY, lM, lD) = left.substringBeforeLast('-').split('.').map { it.toInt() }
