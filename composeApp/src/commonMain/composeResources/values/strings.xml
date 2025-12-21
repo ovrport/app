@@ -56,4 +56,5 @@
     <string name="patch_force_passthrough">Force enable passthrough</string>
     <string name="patch_disable_space_warp">Disable application space warp if used</string>
     <string name="patch_disable_controller_offset">Disable controller tracking offset</string>
+    <string name="patch_remove_vrapi">Remove VrApi library</string>
 </resources>

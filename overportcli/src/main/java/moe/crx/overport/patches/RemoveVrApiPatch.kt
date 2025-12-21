@@ -1,20 +1,15 @@
 package moe.crx.overport.patches
 
 import moe.crx.overport.patching.Patch
-import java.io.File
 
-val PATCH_COPY_OVRPLUGIN_VRAPI = Patch("patch_copy_ovrplugin_vrapi") {
+val PATCH_REMOVE_VRAPI = Patch("patch_remove_vrapi", false) {
     selectWorkspace {
         file.resolve("root/lib").listFiles()?.forEach { archDirectory ->
             val arch = getLibraries().resolve("lib/${archDirectory.name}")
 
             if (arch.exists()) {
                 val vrApi = archDirectory.listFiles().find { it.name.lowercase() == "libvrapi.so" }
-                if (vrApi != null) {
-                    arch.listFiles().filter { it.name == "libOVRPlugin.so" }.forEach { library ->
-                        library.copyTo(File(archDirectory, library.name), true)
-                    }
-                }
+                vrApi?.delete()
             }
         }
     }

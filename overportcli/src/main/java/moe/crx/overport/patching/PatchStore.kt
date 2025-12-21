@@ -42,6 +42,7 @@ object PatchStore {
         register(PATCH_META_XR_AUDIO)
         register(PATCH_MARK_AS_DEBUGGABLE)
         register(PATCH_MARK_ALLOW_BACKUP)
+        register(PATCH_REMOVE_VRAPI)
         register(PATCH_REMOVE_UNREAL_FORCE_QUIT)
         register(PATCH_FORCE_PASSTHROUGH)
         register(PATCH_DISABLE_SPACE_WARP)
