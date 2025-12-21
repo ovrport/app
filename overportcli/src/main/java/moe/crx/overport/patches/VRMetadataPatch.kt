@@ -50,6 +50,20 @@ fun createUsesFeature(name: String, required: Boolean): JSONObject {
     )
 }
 
+fun createUsesLibrary(name: String, required: Boolean): JSONObject {
+    return JSONObject().put("node_type", "element").put("name", "uses-library").put(
+        "attributes", JSONArray().put(
+            JSONObject().put("name", "name").put("id", 16842755)
+                .put("uri", "http://schemas.android.com/apk/res/android").put("prefix", "android")
+                .put("value_type", "STRING").put("data", name)
+        ).put(
+            JSONObject().put("name", "required").put("id", 16843406)
+                .put("uri", "http://schemas.android.com/apk/res/android").put("prefix", "android")
+                .put("value_type", "BOOLEAN").put("data", required)
+        )
+    )
+}
+
 fun createUsesPermission(name: String): JSONObject {
     return JSONObject().put("node_type", "element").put("name", "uses-permission").put(
         "attributes", JSONArray().put(
@@ -96,6 +110,7 @@ val PATCH_VR_METADATA = Patch("patch_vr_metadata") {
                 takeNodes {
                     this?.put(createUsesFeature("android.software.xr.api.openxr", true))
                     this?.put(createUsesFeature("android.software.xr.api.spatial", true))
+                    this?.put(createUsesLibrary("libopenxr.google.so", false))
                     this?.put(createUsesFeature("android.software.xr.input.controller", false))
                         ?.put(createUsesPermission("org.khronos.openxr.permission.OPENXR"))
                         ?.put(createUsesPermission("org.khronos.openxr.permission.OPENXR_SYSTEM"))
