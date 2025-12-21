@@ -36,7 +36,7 @@ fun createMetadataFloat(name: String, value: Float): JSONObject {
     )
 }
 
-fun createUsesFeature(name: String): JSONObject {
+fun createUsesFeature(name: String, required: Boolean): JSONObject {
     return JSONObject().put("node_type", "element").put("name", "uses-feature").put(
         "attributes", JSONArray().put(
             JSONObject().put("name", "name").put("id", 16842755)
@@ -45,7 +45,7 @@ fun createUsesFeature(name: String): JSONObject {
         ).put(
             JSONObject().put("name", "required").put("id", 16843406)
                 .put("uri", "http://schemas.android.com/apk/res/android").put("prefix", "android")
-                .put("value_type", "BOOLEAN").put("data", true)
+                .put("value_type", "BOOLEAN").put("data", required)
         )
     )
 }
@@ -85,11 +85,18 @@ val PATCH_VR_METADATA = Patch("patch_vr_metadata") {
                                 "android.window.PROPERTY_XR_ACTIVITY_START_MODE",
                                 "XR_ACTIVITY_START_MODE_FULL_SPACE_UNMANAGED"
                             )
+                        )?.put(
+                            createProperty(
+                                "android.window.PROPERTY_XR_BOUNDARY_TYPE_RECOMMENDED",
+                                "XR_BOUNDARY_TYPE_LARGE"
+                            )
                         )
                     }
                 }
                 takeNodes {
-                    this?.put(createUsesFeature("android.software.xr.api.openxr"))
+                    this?.put(createUsesFeature("android.software.xr.api.openxr", true))
+                    this?.put(createUsesFeature("android.software.xr.api.spatial", true))
+                    this?.put(createUsesFeature("android.software.xr.input.controller", false))
                         ?.put(createUsesPermission("org.khronos.openxr.permission.OPENXR"))
                         ?.put(createUsesPermission("org.khronos.openxr.permission.OPENXR_SYSTEM"))
                         ?.put(createUsesPermission("com.huawei.android.permission.VR"))
@@ -105,6 +112,10 @@ val PATCH_VR_METADATA = Patch("patch_vr_metadata") {
                         ?.put(createMetadata("com.huawei.android.vr.application.type", "game"))
                         ?.put(createMetadata("com.huawei.vr.application.freeDegree", "3dof|6dof"))
                         ?.put(createMetadataFloat("android.max_aspect", 2.1f))
+                        ?.put(createMetadata("minWaveSDKVersion", "1"))
+                        ?.put(createMetadata("com.htc.vr.content.NumController", "1,2"))
+                        ?.put(createMetadata("com.htc.vr.content.NumDoFController", "3,6DoF"))
+                        ?.put(createMetadata("com.htc.vr.content.NumDoFHmd", "3,6DoF"))
                 }
             }
         }
