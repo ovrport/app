@@ -39,7 +39,7 @@
     <string name="patch_copy_libraries">Copy overport libraries</string>
     <string name="patch_copy_ovrplugin_vrapi">Copy OVRPlugin if VrApi is present</string>
     <string name="patch_fix_min_android_sdk">Fix minimal Android SDK</string>
-    <string name="patch_generate_config">Generate ovrport config</string>
+    <string name="patch_generate_config">Generate overport config</string>
     <string name="patch_remove_localized_names">Remove localized app names</string>
     <string name="patch_clean_up_frida">Clean up Frida leftovers in smali</string>
     <string name="patch_oculus_unity">Patch Oculus detection for Unity</string>
