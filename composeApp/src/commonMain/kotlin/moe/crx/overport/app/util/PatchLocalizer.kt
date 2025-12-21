@@ -24,6 +24,7 @@ object PatchLocalizer {
         PATCH_META_XR_AUDIO to Res.string.patch_meta_xr_audio,
         PATCH_MARK_AS_DEBUGGABLE to Res.string.patch_mark_as_debuggable,
         PATCH_MARK_ALLOW_BACKUP to Res.string.patch_mark_allow_backup,
+        PATCH_REMOVE_VRAPI to Res.string.patch_remove_vrapi,
         PATCH_REMOVE_UNREAL_FORCE_QUIT to Res.string.patch_remove_unreal_force_quit,
         PATCH_FORCE_PASSTHROUGH to Res.string.patch_force_passthrough,
         PATCH_DISABLE_SPACE_WARP to Res.string.patch_disable_space_warp,

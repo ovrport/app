@@ -55,6 +55,12 @@ val PATCH_REPLACE_ICON_LABEL = Patch("patch_replace_icon_label") { arguments ->
         }
     }
 
+    if (!iconDownloaded) {
+        selectFile("root/res/drawable/custom_icon_ovrp.png") {
+            delete()
+        }
+    }
+
     if (iconDownloaded) {
         selectPackageBlock {
             getOrCreate("", "drawable", "custom_icon_ovrp").apply {

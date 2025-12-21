@@ -31,9 +31,12 @@ fun ApplicationInfo(
     applicationPackage: String? = "com.company.application",
     applicationVersion: String? = "1.0.0",
     applicationIcon: ImageBitmap? = null,
+    forceLocalInfo: Boolean = false,
+    useCover: Boolean = false,
 ) {
     var iconIsLoading by rememberSaveable(applicationPackage) { mutableStateOf(true) }
     var onlineIcon by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
+    var onlineCover by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
     var onlineLabel by rememberSaveable(applicationPackage) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -44,12 +47,18 @@ fun ApplicationInfo(
                     val info = applicationPackage?.let { getApplicationInfo(it) }
                     onlineLabel = info?.displayName
 
-                    val image = info?.run {
+                    val icon = info?.run {
                         val associated = images.associateBy { it.imageType }
                         associated["APP_IMG_ICON"] ?: associated["APP_IMG_COVER_SQUARE"]
                     }
 
-                    onlineIcon = image?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+                    val cover = info?.run {
+                        val associated = images.associateBy { it.imageType }
+                        associated["APP_IMG_COVER_SQUARE"] ?: associated["APP_IMG_ICON"]
+                    }
+
+                    onlineIcon = icon?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+                    onlineCover = cover?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
                 }
                 iconIsLoading = false
             }
@@ -61,14 +70,9 @@ fun ApplicationInfo(
     ) {
         Box {
             FadeVisibility(!iconIsLoading) {
-                onlineIcon?.let {
-                    Image(
-                        it,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp).rounded(8.dp)
-                    )
-                } ?: run {
-                    if (applicationIcon == null) {
+                AnimatedContent((onlineCover.takeIf { useCover } ?: onlineIcon)
+                    .takeIf { !forceLocalInfo } ?: applicationIcon) {
+                    if (it == null) {
                         Icon(
                             Icons.Default.Widgets,
                             contentDescription = null,
@@ -76,7 +80,7 @@ fun ApplicationInfo(
                         )
                     } else {
                         Image(
-                            applicationIcon,
+                            it,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp).rounded(8.dp)
                         )
@@ -91,7 +95,7 @@ fun ApplicationInfo(
             modifier = Modifier.height(48.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            AnimatedContent(onlineLabel ?: applicationName) {
+            AnimatedContent(onlineLabel.takeIf { !forceLocalInfo } ?: applicationName) {
                 Text("$it ($applicationVersion)")
             }
             Text(

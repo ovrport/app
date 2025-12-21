@@ -10,7 +10,7 @@ class VersionManager(val workingDirectory: File) {
 
     companion object {
         val json = Json { ignoreUnknownKeys = true }
-        const val VERSION = "1.2.1"
+        const val VERSION = "1.2.2"
 
         private fun isVersionLower(left: String, right: String): Boolean {
             val (lY, lM, lD) = left.substringBeforeLast('-').split('.').map { it.toInt() }
@@ -80,6 +80,7 @@ class VersionManager(val workingDirectory: File) {
         if (installedEntry != null) {
             val librariesDir = workingDirectory.resolve("libraries/${installedEntry.version}")
             if (librariesDir.isDirectory) {
+                appendInstalled(installedEntry)
                 return installedEntry.version
             }
         }
@@ -132,7 +133,7 @@ class VersionManager(val workingDirectory: File) {
                         o2.version
                     )
                 ) 1 else -1
-            })
+            }).filter { workingDirectory.resolve("libraries/${it.version}").isDirectory }
         }
 
         return listOf()

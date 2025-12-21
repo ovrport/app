@@ -8,12 +8,21 @@ class FileTransformer(val file: File) {
         file.writeText(Regex(input, RegexOption.DOT_MATCHES_ALL).replace(file.readText(), output))
     }
 
+    fun delete(): Boolean {
+        return file.deleteRecursively()
+    }
+
     fun readText(): String {
         return file.readText()
     }
 
     fun append(line: String) {
         file.appendText(line)
+    }
+
+    fun appendLine(line: String) {
+        append(line)
+        append("\n")
     }
 
     fun readJson(): JSONObject? {
@@ -35,6 +44,10 @@ class FileTransformer(val file: File) {
     fun replaceHex(input: String, output: String) {
         val bytes = file.readBytes()
         val inputBytes = input.split(' ')
+        val outputBytes = output.split(' ')
+        var startIndex = -1
+
+        check(inputBytes.size == outputBytes.size)
 
         for (i in 0..<bytes.size - inputBytes.size + 1) {
             var matches = true
@@ -52,12 +65,22 @@ class FileTransformer(val file: File) {
             }
 
             if (matches) {
-                val replaced = bytes.slice(0..<i) +
-                        output.split(' ').map { it.toUByte(16).toByte() } +
-                        bytes.slice(i + inputBytes.size..<bytes.size)
-                file.writeBytes(replaced.toByteArray())
-                return
+                startIndex = i
             }
         }
+
+        if (startIndex == -1) {
+            return
+        }
+
+        for (i in 0..<inputBytes.size) {
+            if (outputBytes[i] != "??") {
+                bytes[i + startIndex] = outputBytes[i].toUByte(16).toByte()
+            } else if (inputBytes[i] != "??") {
+                bytes[i + startIndex] = inputBytes[i].toUByte(16).toByte()
+            }
+        }
+
+        file.writeBytes(bytes)
     }
 }

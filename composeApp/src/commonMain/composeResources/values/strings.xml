@@ -39,15 +39,15 @@
     <string name="patch_copy_libraries">Copy overport libraries</string>
     <string name="patch_copy_ovrplugin_vrapi">Copy OVRPlugin if VrApi is present</string>
     <string name="patch_fix_min_android_sdk">Fix minimal Android SDK</string>
-    <string name="patch_generate_config">Generate ovrport config</string>
+    <string name="patch_generate_config">Generate overport config</string>
     <string name="patch_remove_localized_names">Remove localized app names</string>
-    <string name="patch_clean_up_frida">Clean up Frida leftovers</string>
+    <string name="patch_clean_up_frida">Clean up Frida leftovers in smali</string>
     <string name="patch_oculus_unity">Patch Oculus detection for Unity</string>
     <string name="patch_oculus_unreal">Patch Oculus detection for Unreal</string>
     <string name="patch_vr_metadata">Pico/YVR/Quest metadata</string>
     <string name="patch_launcher_entry">Fix launcher icon entry</string>
     <string name="patch_remove_uses_library">Remove uses-library</string>
-    <string name="patch_fix_unreal_crash">Fix Unreal Engine 4 crash</string>
+    <string name="patch_fix_unreal_crash">Fix UE4 crash with Unity stub</string>
     <string name="patch_meta_xr_audio">Patch Meta XR Audio</string>
     <string name="patch_mark_as_debuggable">Mark application as debuggable</string>
     <string name="patch_mark_allow_backup">Mark application to allow backup</string>
@@ -56,4 +56,5 @@
     <string name="patch_force_passthrough">Force enable passthrough</string>
     <string name="patch_disable_space_warp">Disable application space warp if used</string>
     <string name="patch_disable_controller_offset">Disable controller tracking offset</string>
+    <string name="patch_remove_vrapi">Remove VrApi library</string>
 </resources>
