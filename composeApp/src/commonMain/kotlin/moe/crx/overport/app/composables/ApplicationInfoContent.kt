@@ -61,7 +61,8 @@ fun ApplicationInfoContent(
                 applicationPackage,
                 applicationVersion,
                 applicationIcon,
-                !enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name)
+                !enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name),
+                patchIconArgument != "icon",
             )
         }
 

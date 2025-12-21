@@ -32,9 +32,11 @@ fun ApplicationInfo(
     applicationVersion: String? = "1.0.0",
     applicationIcon: ImageBitmap? = null,
     forceLocalInfo: Boolean = false,
+    useCover: Boolean = false,
 ) {
     var iconIsLoading by rememberSaveable(applicationPackage) { mutableStateOf(true) }
     var onlineIcon by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
+    var onlineCover by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
     var onlineLabel by rememberSaveable(applicationPackage) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -45,12 +47,18 @@ fun ApplicationInfo(
                     val info = applicationPackage?.let { getApplicationInfo(it) }
                     onlineLabel = info?.displayName
 
-                    val image = info?.run {
+                    val icon = info?.run {
                         val associated = images.associateBy { it.imageType }
                         associated["APP_IMG_ICON"] ?: associated["APP_IMG_COVER_SQUARE"]
                     }
 
-                    onlineIcon = image?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+                    val cover = info?.run {
+                        val associated = images.associateBy { it.imageType }
+                        associated["APP_IMG_COVER_SQUARE"] ?: associated["APP_IMG_ICON"]
+                    }
+
+                    onlineIcon = icon?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+                    onlineCover = cover?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
                 }
                 iconIsLoading = false
             }
@@ -62,7 +70,8 @@ fun ApplicationInfo(
     ) {
         Box {
             FadeVisibility(!iconIsLoading) {
-                AnimatedContent(onlineIcon.takeIf { !forceLocalInfo } ?: applicationIcon) { it ->
+                AnimatedContent((onlineCover.takeIf { useCover } ?: onlineIcon)
+                    .takeIf { !forceLocalInfo } ?: applicationIcon) {
                     if (it == null) {
                         Icon(
                             Icons.Default.Widgets,
