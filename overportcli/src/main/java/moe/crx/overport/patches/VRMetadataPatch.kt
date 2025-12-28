@@ -126,7 +126,7 @@ val PATCH_VR_METADATA = Patch("patch_vr_metadata") {
                         ?.put(createMetadata("com.huawei.android.vr.application.mode", "vr_only"))
                         ?.put(createMetadata("com.huawei.android.vr.application.type", "game"))
                         ?.put(createMetadata("com.huawei.vr.application.freeDegree", "3dof|6dof"))
-                        ?.put(createMetadataFloat("android.max_aspect", 1074161254))
+                        //?.put(createMetadataFloat("android.max_aspect", 1074161254)) // MBF doesn't support it
                         ?.put(createMetadata("minWaveSDKVersion", "1"))
                         ?.put(createMetadata("com.htc.vr.content.NumController", "1,2"))
                         ?.put(createMetadata("com.htc.vr.content.NumDoFController", "3,6DoF"))
