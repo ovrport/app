@@ -22,7 +22,7 @@ fun createMetadata(name: String, value: String): JSONObject {
     )
 }
 
-fun createMetadataFloat(name: String, value: Int): JSONObject {
+fun createMetadataFloat(name: String, value: Float): JSONObject {
     return JSONObject().put("node_type", "element").put("name", "meta-data").put(
         "attributes", JSONArray().put(
             JSONObject().put("name", "name").put("id", 16842755)
@@ -31,7 +31,7 @@ fun createMetadataFloat(name: String, value: Int): JSONObject {
         ).put(
             JSONObject().put("name", "value").put("id", 16842788)
                 .put("uri", "http://schemas.android.com/apk/res/android").put("prefix", "android")
-                .put("value_type", "FLOAT").put("data", value)
+                .put("value_type", "FLOAT").put("data", value.toRawBits())
         )
     )
 }
@@ -126,7 +126,7 @@ val PATCH_VR_METADATA = Patch("patch_vr_metadata") {
                         ?.put(createMetadata("com.huawei.android.vr.application.mode", "vr_only"))
                         ?.put(createMetadata("com.huawei.android.vr.application.type", "game"))
                         ?.put(createMetadata("com.huawei.vr.application.freeDegree", "3dof|6dof"))
-                        //?.put(createMetadataFloat("android.max_aspect", 1074161254)) // MBF doesn't support it
+                        ?.put(createMetadataFloat("android.max_aspect", 2.1f))
                         ?.put(createMetadata("minWaveSDKVersion", "1"))
                         ?.put(createMetadata("com.htc.vr.content.NumController", "1,2"))
                         ?.put(createMetadata("com.htc.vr.content.NumDoFController", "3,6DoF"))
