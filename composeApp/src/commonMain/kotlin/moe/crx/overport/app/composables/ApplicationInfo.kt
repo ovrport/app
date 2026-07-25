@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import moe.crx.overport.app.decodeBitmap
 import moe.crx.overport.app.util.ModifierUtil.rounded
@@ -25,43 +24,53 @@ import overportapp.composeapp.generated.resources.Res
 import overportapp.composeapp.generated.resources.unknown_package
 import java.util.*
 
+val iconCache = mutableMapOf<String, ImageBitmap?>()
+val coverCache = mutableMapOf<String, ImageBitmap?>()
+
 @Composable
 fun ApplicationInfo(
-    applicationName: String? = "Application",
-    applicationPackage: String? = "com.company.application",
-    applicationVersion: String? = "1.0.0",
+    applicationName: String,
+    applicationPackage: String,
+    applicationVersion: String,
     applicationIcon: ImageBitmap? = null,
     forceLocalInfo: Boolean = false,
     useCover: Boolean = false,
 ) {
-    var iconIsLoading by rememberSaveable(applicationPackage) { mutableStateOf(true) }
-    var onlineIcon by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
-    var onlineCover by rememberSaveable(applicationPackage) { mutableStateOf<ImageBitmap?>(null) }
+    var iconIsLoading by remember(applicationPackage) { mutableStateOf(true) }
+    var onlineIcon by remember(applicationPackage) { mutableStateOf(iconCache[applicationPackage]) }
+    var onlineCover by remember(applicationPackage) { mutableStateOf(coverCache[applicationPackage]) }
+
     var onlineLabel by rememberSaveable(applicationPackage) { mutableStateOf<String?>(null) }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(applicationPackage) {
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                runCatching {
-                    val info = applicationPackage?.let { getApplicationInfo(it) }
-                    onlineLabel = info?.displayName
-
-                    val icon = info?.run {
-                        val associated = images.associateBy { it.imageType }
-                        associated["APP_IMG_ICON"] ?: associated["APP_IMG_COVER_SQUARE"]
-                    }
-
-                    val cover = info?.run {
-                        val associated = images.associateBy { it.imageType }
-                        associated["APP_IMG_COVER_SQUARE"] ?: associated["APP_IMG_ICON"]
-                    }
-
-                    onlineIcon = icon?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
-                    onlineCover = cover?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
-                }
-                iconIsLoading = false
+        withContext(Dispatchers.IO) {
+            if (iconCache.containsKey(applicationPackage)) {
+                return@withContext
             }
+
+            val info = getApplicationInfo(applicationPackage)
+            onlineLabel = info?.displayName
+
+            val icon = info?.run {
+                val associated = images.associateBy { it.imageType }
+                associated["APP_IMG_ICON"] ?: associated["APP_IMG_COVER_SQUARE"]
+            }
+
+            val cover = info?.run {
+                val associated = images.associateBy { it.imageType }
+                associated["APP_IMG_COVER_SQUARE"] ?: associated["APP_IMG_ICON"]
+            }
+
+            val iconBitmap = icon?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+            val coverBitmap = cover?.uri?.let { Base64.getDecoder().decode(it) }?.decodeBitmap()
+
+            iconCache[applicationPackage] = iconBitmap
+            coverCache[applicationPackage] = coverBitmap
+
+            onlineIcon = iconBitmap
+            onlineCover = coverBitmap
+
+            iconIsLoading = false
         }
     }
 

@@ -21,9 +21,9 @@ import overportapp.composeapp.generated.resources.*
 @Composable
 @Preview
 fun ApplicationInfoContent(
-    applicationName: String? = "Application",
-    applicationPackage: String? = "",
-    applicationVersion: String? = "1.0.0",
+    applicationName: String,
+    applicationPackage: String,
+    applicationVersion: String,
     applicationIcon: ImageBitmap? = null,
     onCancel: () -> Unit = {},
     onConfirm: (Map<String, List<String>>) -> Unit = {}

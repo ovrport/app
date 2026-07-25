@@ -27,10 +27,8 @@ fun VersionManagerSheet(viewModel: MainViewModel, onSelected: (String) -> Unit, 
     var available by remember { mutableStateOf<List<OverportRelease>?>(null) }
 
     LaunchedEffect(Unit) {
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                available = viewModel.versionManager.available()
-            }
+        withContext(Dispatchers.IO) {
+            available = viewModel.versionManager.available()
         }
     }
 

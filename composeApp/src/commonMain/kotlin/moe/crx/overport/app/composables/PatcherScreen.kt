@@ -35,30 +35,26 @@ fun PatcherScreen(
     val isPatcherVisible = !viewModel.working && viewModel.isApkLoaded()
 
     LaunchedEffect(openFlow) {
-        scope.launch {
-            openFlow.collect {
-                inputFile = it
-            }
+        openFlow.collect {
+            inputFile = it
         }
     }
 
     LaunchedEffect(saveFlow) {
-        scope.launch {
-            saveFlow.collect { stream ->
-                val outputStream = stream ?: return@collect
-                try {
-                    viewModel.process(patches)
-                    viewModel.export(outputStream)
-                    scope.launch {
-                        snackbarHostState.showSnackbar(getString(Res.string.apk_file_exported))
-                    }
-                } catch (ex: Throwable) {
-                    ex.printStackTrace()
-                    errorMessage = getString(Res.string.unknown_error) to ex.stackTraceToString()
-                } finally {
-                    viewModel.cancel()
-                    outputStream.close()
+        saveFlow.collect { stream ->
+            val outputStream = stream ?: return@collect
+            try {
+                viewModel.process(patches)
+                viewModel.export(outputStream)
+                scope.launch {
+                    snackbarHostState.showSnackbar(getString(Res.string.apk_file_exported))
                 }
+            } catch (ex: Throwable) {
+                ex.printStackTrace()
+                errorMessage = getString(Res.string.unknown_error) to ex.stackTraceToString()
+            } finally {
+                viewModel.cancel()
+                //outputStream.close()
             }
         }
     }
@@ -71,9 +67,9 @@ fun PatcherScreen(
 
     FadeVisibility(isPatcherVisible) {
         ApplicationInfoContent(
-            viewModel.currentAppName(),
-            viewModel.currentAppPackage(),
-            viewModel.currentAppVersion(),
+            viewModel.currentAppName() ?: "",
+            viewModel.currentAppPackage() ?: "",
+            viewModel.currentAppVersion() ?: "",
             viewModel.currentAppIcon(),
             onCancel = {
                 scope.launch {
