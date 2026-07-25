@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "moe.crx"
-version = "1.2.2"
+version = "1.2.3"
 
 dependencies {
     implementation(libs.android.tools.build)
