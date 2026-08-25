@@ -1,5 +1,10 @@
 package moe.crx.overport.app.composables
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import moe.crx.overport.app.util.PatchLocalizer.localizedPatch
 import moe.crx.overport.patches.PATCH_REPLACE_ICON_LABEL
@@ -28,6 +34,8 @@ fun ApplicationInfoContent(
     onCancel: () -> Unit = {},
     onConfirm: (Map<String, List<String>>) -> Unit = {}
 ) {
+    var currentStep by remember { mutableIntStateOf(0) } // 0: App Info Review, 1: Patch Selection
+
     val enabledPatches = remember(applicationPackage) {
         mutableStateMapOf(
             *PatchStore.recommended().map { it.name to listOf<String>() }.toTypedArray()
@@ -51,99 +59,154 @@ fun ApplicationInfoContent(
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        FlowRow(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        // Step Indicator (Simple)
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ApplicationInfo(
-                applicationName,
-                applicationPackage,
-                applicationVersion,
-                applicationIcon,
-                !enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name),
-                patchIconArgument != "icon",
+            LinearProgressIndicator(
+                progress = { if (currentStep >= 0) 1f else 0f },
+                modifier = Modifier.weight(1f).height(4.dp),
+                color = if (currentStep >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                strokeCap = StrokeCap.Round
+            )
+            LinearProgressIndicator(
+                progress = { if (currentStep >= 1) 1f else 0f },
+                modifier = Modifier.weight(1f).height(4.dp),
+                color = if (currentStep >= 1) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                strokeCap = StrokeCap.Round
             )
         }
 
+        Text(
+            text = if (currentStep == 0) stringResource(Res.string.wizard_step_info) else stringResource(Res.string.wizard_step_patches),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
         Box(modifier = Modifier.weight(1f)) {
-            LazyColumn {
-                items(PatchStore.all()) {
-                    ListItem(
-                        headlineContent = {
-                            Text(localizedPatch(it))
-                        },
-                        supportingContent = {
-                            if (!it.isRecommended) {
-                                Text(stringResource(Res.string.use_at_your_risk))
+            AnimatedContent(
+                targetState = currentStep,
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                }
+            ) { step ->
+                if (step == 0) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ApplicationInfo(
+                            applicationName,
+                            applicationPackage,
+                            applicationVersion,
+                            applicationIcon,
+                            !enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name),
+                            patchIconArgument != "icon",
+                        )
+
+                        Text(
+                            text = "Review the application details before proceeding to patch selection.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(PatchStore.all()) {
+                            ListItem(
+                                headlineContent = {
+                                    Text(localizedPatch(it))
+                                },
+                                supportingContent = {
+                                    if (!it.isRecommended) {
+                                        Text(stringResource(Res.string.use_at_your_risk))
+                                    }
+                                },
+                                trailingContent = {
+                                    Checkbox(enabledPatches.containsKey(it.name), { _ ->
+                                        togglePatch(it)
+                                    })
+                                },
+                                modifier = Modifier.clickable {
+                                    togglePatch(it)
+                                }
+                            )
+                            if (PATCH_REPLACE_ICON_LABEL == it) {
+                                FadeVisibility(enabledPatches.containsKey(it.name)) {
+                                    ListItem(
+                                        headlineContent = {
+                                            Text(stringResource(Res.string.replace_icon_with_icon))
+                                        },
+                                        trailingContent = {
+                                            RadioButton(patchIconArgument == "icon", {
+                                                patchIconArgument = "icon"
+                                            })
+                                        },
+                                        modifier = Modifier.padding(24.dp, 0.dp, 0.dp, 0.dp).clickable {
+                                            patchIconArgument = "icon"
+                                        }
+                                    )
+                                }
+                                FadeVisibility(enabledPatches.containsKey(it.name)) {
+                                    ListItem(
+                                        headlineContent = {
+                                            Text(stringResource(Res.string.replace_icon_with_cover))
+                                        },
+                                        trailingContent = {
+                                            RadioButton(patchIconArgument == "cover", {
+                                                patchIconArgument = "cover"
+                                            })
+                                        },
+                                        modifier = Modifier.padding(24.dp, 0.dp, 0.dp, 0.dp).clickable {
+                                            patchIconArgument = "cover"
+                                        }
+                                    )
+                                }
                             }
-                        },
-                        trailingContent = {
-                            Checkbox(enabledPatches.containsKey(it.name), { _ ->
-                                togglePatch(it)
-                            })
-                        },
-                        modifier = Modifier.clickable {
-                            togglePatch(it)
-                        }
-                    )
-                    if (PATCH_REPLACE_ICON_LABEL == it) {
-                        FadeVisibility(enabledPatches.containsKey(it.name)) {
-                            ListItem(
-                                headlineContent = {
-                                    Text(stringResource(Res.string.replace_icon_with_icon))
-                                },
-                                trailingContent = {
-                                    RadioButton(patchIconArgument == "icon", {
-                                        patchIconArgument = "icon"
-                                    })
-                                },
-                                modifier = Modifier.padding(24.dp, 0.dp, 0.dp, 0.dp).clickable {
-                                    patchIconArgument = "icon"
-                                }
-                            )
-                        }
-                        FadeVisibility(enabledPatches.containsKey(it.name)) {
-                            ListItem(
-                                headlineContent = {
-                                    Text(stringResource(Res.string.replace_icon_with_cover))
-                                },
-                                trailingContent = {
-                                    RadioButton(patchIconArgument == "cover", {
-                                        patchIconArgument = "cover"
-                                    })
-                                },
-                                modifier = Modifier.padding(24.dp, 0.dp, 0.dp, 0.dp).clickable {
-                                    patchIconArgument = "cover"
-                                }
-                            )
                         }
                     }
                 }
             }
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onCancel
-            ) {
-                Text(stringResource(Res.string.action_cancel))
-            }
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    if (enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name)) {
-                        enabledPatches[PATCH_REPLACE_ICON_LABEL.name] = listOf(patchIconArgument)
-                    }
-                    onConfirm(enabledPatches)
+            if (currentStep == 0) {
+                OutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = onCancel
+                ) {
+                    Text(stringResource(Res.string.action_cancel))
                 }
-            ) {
-                Text(stringResource(Res.string.action_confirm))
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { currentStep = 1 }
+                ) {
+                    Text(stringResource(Res.string.wizard_next))
+                }
+            } else {
+                OutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { currentStep = 0 }
+                ) {
+                    Text(stringResource(Res.string.wizard_back))
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        if (enabledPatches.containsKey(PATCH_REPLACE_ICON_LABEL.name)) {
+                            enabledPatches[PATCH_REPLACE_ICON_LABEL.name] = listOf(patchIconArgument)
+                        }
+                        onConfirm(enabledPatches)
+                    }
+                ) {
+                    Text(stringResource(Res.string.action_confirm))
+                }
             }
         }
     }

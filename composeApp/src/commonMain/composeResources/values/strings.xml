@@ -57,4 +57,12 @@
     <string name="patch_disable_space_warp">Disable application space warp if used</string>
     <string name="patch_disable_controller_offset">Disable controller tracking offset</string>
     <string name="patch_remove_vrapi">Remove VrApi library</string>
+    <string name="theme_auto">Auto</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_theme">Theme</string>
+    <string name="wizard_step_info">App Info</string>
+    <string name="wizard_step_patches">Patches</string>
+    <string name="wizard_next">Next</string>
+    <string name="wizard_back">Back</string>
 </resources>
