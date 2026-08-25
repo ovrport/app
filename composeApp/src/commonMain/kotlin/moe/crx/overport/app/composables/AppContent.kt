@@ -1,9 +1,13 @@
 package moe.crx.overport.app.composables
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.SettingsBrightness
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,10 +25,7 @@ import moe.crx.overport.app.theme.OverportTheme
 import moe.crx.overport.versions.VersionManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import overportapp.composeapp.generated.resources.Res
-import overportapp.composeapp.generated.resources.overport
-import overportapp.composeapp.generated.resources.patcher_nav_item
-import overportapp.composeapp.generated.resources.update_available
+import overportapp.composeapp.generated.resources.*
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -37,7 +38,13 @@ fun AppContent(
     openFlow: MutableSharedFlow<Pair<String, InputStream>?>,
     saveFlow: MutableSharedFlow<OutputStream?>,
 ) {
-    OverportTheme(darkTheme = true) {
+    val darkTheme = when (viewModel.themePreference) {
+        MainViewModel.ThemePreference.AUTO -> isSystemInDarkTheme()
+        MainViewModel.ThemePreference.LIGHT -> false
+        MainViewModel.ThemePreference.DARK -> true
+    }
+
+    OverportTheme(darkTheme = darkTheme) {
         val snackbarHostState = remember { SnackbarHostState() }
 
         val patcherNavItem =
@@ -84,6 +91,23 @@ fun AppContent(
                                     stringResource(Res.string.update_available),
                                 )
                             }
+                        }
+
+                        IconButton(onClick = {
+                            viewModel.themePreference = when (viewModel.themePreference) {
+                                MainViewModel.ThemePreference.AUTO -> MainViewModel.ThemePreference.LIGHT
+                                MainViewModel.ThemePreference.LIGHT -> MainViewModel.ThemePreference.DARK
+                                MainViewModel.ThemePreference.DARK -> MainViewModel.ThemePreference.AUTO
+                            }
+                        }) {
+                            Icon(
+                                imageVector = when (viewModel.themePreference) {
+                                    MainViewModel.ThemePreference.AUTO -> Icons.Default.SettingsBrightness
+                                    MainViewModel.ThemePreference.LIGHT -> Icons.Default.LightMode
+                                    MainViewModel.ThemePreference.DARK -> Icons.Default.DarkMode
+                                },
+                                contentDescription = stringResource(Res.string.settings_theme)
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(

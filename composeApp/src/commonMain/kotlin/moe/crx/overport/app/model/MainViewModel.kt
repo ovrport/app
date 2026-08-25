@@ -27,9 +27,15 @@ class MainViewModel(val dataDirectory: File, platformIconResizer: IconResizer) :
         const val RELEASES_URL = "https://api.github.com/repos/ovrport/app/releases"
     }
 
+    enum class ThemePreference {
+        AUTO, LIGHT, DARK
+    }
+
     init {
         PLATFORM_ICON_RESIZER = platformIconResizer
     }
+
+    var themePreference by mutableStateOf(ThemePreference.AUTO)
 
     private var patcherState by mutableStateOf<PatcherContext?>(null)
     var versionManager by mutableStateOf(VersionManager(dataDirectory))
